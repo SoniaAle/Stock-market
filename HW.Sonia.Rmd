@@ -1,0 +1,129 @@
+---
+title: "Homework"
+output:
+  word_document: default
+  html_notebook: default
+---
+```{r}
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+```
+
+```{r}
+my_stocks <- read.csv("stocks.csv",header=TRUE, stringsAsFactors = FALSE)
+```
+
+**Your job first, is to 'know your data'. Run whatever code you feel necessary to get to know your data. Add more code blocks as needed, leave this part in your document when you submit it**
+
+```{r}
+str(my_stocks)
+```
+```{r}
+summary(my_stocks)
+```
+```{r}
+head(my_stocks,n=5)
+```
+
+```{r}
+tail(my_stocks,n=5)
+```
+
+**There are 65020 observations and 9 variables. The head() and tail()are showing the first and last 6 rows of the data set. The summary table is showing statistical measures for all numeric and integer columns.**
+
+
+**How many different stocks are there (by stock symbol) (5)?**
+
+```{r}
+my_stocks %>% count(stock_symbol)
+```
+
+
+**There are 25 diffrent stocks in the dataset.**
+
+```{r}
+table(my_stocks$stock_symbol)
+```
+**Which stock had the highest single gain in a day, which day was it (10)?**
+
+```{r}
+my_stocks["Profit_or_Loss"]<-my_stocks$stock_price_close - my_stocks$stock_price_open
+```
+```{r}
+subset(my_stocks,Profit_or_Loss==max(Profit_or_Loss))
+```
+
+**The (NYSE) XOM had the highest single gain (8.18) in a day and the day was 2008-10-13.**
+
+
+__Which stock had the highest single loss in a day, which day was it (10)?__
+
+```{r}
+subset(my_stocks,Profit_or_Loss==min(Profit_or_Loss))
+```
+
+
+**The (NYSE) XOM had the highest single loss (-9.6) in a day and the day was 2008-10-09**
+
+
+__Create a plot of closing price for XOM over time (5)__
+
+```{r}
+stock_symbol_XOM<-my_stocks[my_stocks$stock_symbol=="XOM",]
+```
+
+```{r}
+dateXOM<-as.Date(stock_symbol_XOM$date,format = "%m/%d/%y")
+```
+
+```{r}
+plot(dateXOM,stock_symbol_XOM$stock_price_close,type = "l",col="blue")
+```
+
+
+__Create a plot of closing price for XKK over time (5)__
+
+
+```{r}
+stock_symbol_XKK<-my_stocks[my_stocks$stock_symbol=="XKK",]
+```
+```{r}
+dateXKK<-as.Date(stock_symbol_XKK$date,format = "%m/%d/%y")
+```
+```{r}
+plot(dateXKK[1:length(stock_symbol_XKK$stock_price_close)],stock_symbol_XKK$stock_price_close,type="l",col="green")
+```
+
+__Create a plot of the change in price per day for both XOM and XKK (10)__
+
+```{r}
+stock_XOM<-filter(my_stocks,stock_symbol==c("XOM"))
+```
+
+```{r}
+ggplot(data = stock_XOM,aes(x=dateXOM,y=Profit_or_Loss))+geom_point()
+```
+
+```{r}
+stock_XKK<-filter(my_stocks,stock_symbol==c("XKK"))
+```
+```{r}
+ggplot(data = stock_XKK,aes(dateXKK,y=Profit_or_Loss))+geom_point()
+```
+
+
+This is an [R Markdown](http://rmarkdown.rstudio.com) Notebook. When you execute code within the notebook, the results appear beneath the code. 
+
+Try executing this chunk by clicking the *Run* button within the chunk or by placing your cursor inside it and pressing *Cmd+Shift+Enter*. 
+
+```{r}
+plot(cars)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Cmd+Option+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Cmd+Shift+K* to preview the HTML file). 
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+
